@@ -77,7 +77,7 @@ function displayToday(city,data){
   
 
   $cityNameEl.textContent = city+" "+todayDate;
-  $currentTempEl.textContent = "Temp: "+data.current.temp;
+  $currentTempEl.textContent = "Temp: "+data.current.temp+ " ºF";
   $currentWindEl.textContent = "Wind: "+data.current.wind_speed+" MPH";
   $currentHumidityEl.textContent = "Humidity: "+data.current.humidity+" %";
   $currentUVEl.textContent = "UVEl: "+data.current.uvi;
