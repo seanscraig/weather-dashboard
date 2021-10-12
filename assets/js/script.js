@@ -9,7 +9,7 @@ const APIKey = "17df62e6c611e766e40ad0ad3ee5ec14";
 
 var searchHistory = [];
 
-var formSubmitHandler = function(event) {
+var formSubmitHandler = function (event) {
   event.preventDefault();
 
   var cityName = cityEl.value.trim();
@@ -21,24 +21,24 @@ var formSubmitHandler = function(event) {
   } else {
     cityName = capFirstLetter(cityName);
 
-    if (searchHistory.indexOf(cityName) === -1){
+    if (searchHistory.indexOf(cityName) === -1) {
       searchHistory.push(cityName);
     }
-    
+
     localStorage.setItem("search-history", JSON.stringify(searchHistory));
     renderHistory();
     getWeather(cityName);
   }
 };
 
-var buttonSearchHandler = function(event) {
+var buttonSearchHandler = function (event) {
   event.preventDefault();
-  
+
   var btn = event.target;
   var city = btn.getAttribute("data-search");
 
   getWeather(city);
-}
+};
 
 function renderHistory() {
   $searchHistoryEl.innerHTML = "";
@@ -59,40 +59,46 @@ function renderHistory() {
   }
 }
 
-function getWeather(city){
-  var cityRequestURL = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&units=imperial&appid="+APIKey;
-  
+function getWeather(city) {
+  var cityRequestURL =
+    "https://api.openweathermap.org/data/2.5/weather?q=" +
+    city +
+    "&units=imperial&appid=" +
+    APIKey;
+
   fetch(cityRequestURL)
-    .then(function(response){
-      if (response.ok){
-        response.json().then(function(data){
+    .then(function (response) {
+      if (response.ok) {
+        response.json().then(function (data) {
           var lat = data.coord.lat;
           var lon = data.coord.lon;
-          var latLogRequestURL = "https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+lon+"&units=imperial&appid="+APIKey;
-          fetch(latLogRequestURL)
-            .then(function(response){
-              if (response.ok) {
-                response.json().then(function(data){
-                  displayToday(city,data);
-                })
-              }
-              else {
-                alert("Error: "+response.statusText);
-              }
-            })
+          var latLogRequestURL =
+            "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+            lat +
+            "&lon=" +
+            lon +
+            "&units=imperial&appid=" +
+            APIKey;
+          fetch(latLogRequestURL).then(function (response) {
+            if (response.ok) {
+              response.json().then(function (data) {
+                displayToday(city, data);
+              });
+            } else {
+              alert("Error: " + response.statusText);
+            }
+          });
         });
       } else {
-        alert("Error: "+response.statusText);
+        alert("Error: " + response.statusText);
       }
     })
-    .catch(function(error){
+    .catch(function (error) {
       alert("Unable to fetch weather data");
     });
 }
 
-function displayToday(city,data){
-  $todayEl.innerHTML = "";
-  $fiveDayEl.innerHTML = "";
+function displayToday(city, data) {
   var $cityNameEl = document.createElement("h1");
   var $currentDescriptionEl = document.createElement("h2");
   var $currentTempEl = document.createElement("p");
@@ -102,16 +108,24 @@ function displayToday(city,data){
   var $uvButton = document.createElement("button");
   var $currentWeatherIconEl = document.createElement("img");
 
-  $cityNameEl.textContent = capFirstLetter(city)+" "+moment.unix(data.current.dt).format("(MM/DD/YYYY)")
-  $currentDescriptionEl.textContent = capFirstLetter(data.current.weather[0].description);
-  $currentTempEl.textContent = "Temp: "+data.current.temp+" ºF";
-  $currentWindEl.textContent = "Wind: "+data.current.wind_speed+" MPH";
-  $currentHumidityEl.textContent = "Humidity: "+data.current.humidity+" %";
+  $todayEl.innerHTML = "";
+  $fiveDayEl.innerHTML = "";
+
+  $cityNameEl.textContent =
+    city +
+    " " +
+    moment.unix(data.current.dt).format("(MM/DD/YYYY)");
+  $currentDescriptionEl.textContent = capFirstLetter(
+    data.current.weather[0].description
+  );
+  $currentTempEl.textContent = "Temp: " + data.current.temp + " ºF";
+  $currentWindEl.textContent = "Wind: " + data.current.wind_speed + " MPH";
+  $currentHumidityEl.textContent = "Humidity: " + data.current.humidity + " %";
 
   $currentUVLabel.textContent = "UV Index: ";
   $uvButton.textContent = data.current.uvi;
 
-  if (data.current.uvi < 3){
+  if (data.current.uvi < 3) {
     $uvButton.classList.add("btn-success");
   } else if (data.current.uvi > 3 && data.current.uvi < 6) {
     $uvButton.classList.add("btn-warning");
@@ -119,7 +133,8 @@ function displayToday(city,data){
     $uvButton.classList.add("btn-danger");
   }
 
-  $currentWeatherIconEl.src = "https://openweathermap.org/img/w/" + data.current.weather[0].icon + ".png";
+  $currentWeatherIconEl.src =
+    "https://openweathermap.org/img/w/" + data.current.weather[0].icon + ".png";
   $currentWeatherIconEl.classList.add("icon");
 
   $todayEl.classList.add("card");
@@ -135,13 +150,13 @@ function displayToday(city,data){
   displayFiveDay(data);
 }
 
-function displayFiveDay(data){
+function displayFiveDay(data) {
   var fiveDayLabel = document.createElement("h2");
   fiveDayLabel.textContent = "5-Day Forecast:";
   $fiveDayEl.appendChild(fiveDayLabel);
 
   //Create Cards
-  for (var i = 1; i < 6; i++){
+  for (var i = 1; i < 6; i++) {
     var containerDiv = document.createElement("div");
     var cardDiv = document.createElement("div");
     var cardBody = document.createElement("div");
@@ -151,21 +166,24 @@ function displayFiveDay(data){
     var $windEl = document.createElement("p");
     var $humidityEl = document.createElement("p");
 
-    $dailyEl.src = "https://openweathermap.org/img/w/" + data.daily[i].weather[0].icon + ".png";
+    $dailyEl.src =
+      "https://openweathermap.org/img/w/" +
+      data.daily[i].weather[0].icon +
+      ".png";
     $dailyEl.classList.add("icon");
-  
+
     $dateEl.textContent = moment.unix(data.daily[i].dt).format("MM/DD/YYYY");
-    $tempEl.textContent = "Temp: "+data.daily[i].temp.max+" ºF";
-    $windEl.textContent = "Wind: "+data.daily[i].wind_speed+" MPH";
-    $humidityEl.textContent = "Humidity: "+data.daily[i].humidity+" %";
-  
+    $tempEl.textContent = "Temp: " + data.daily[i].temp.max + " ºF";
+    $windEl.textContent = "Wind: " + data.daily[i].wind_speed + " MPH";
+    $humidityEl.textContent = "Humidity: " + data.daily[i].humidity + " %";
+
     containerDiv.classList.add("col-md-2");
     cardDiv.classList.add("card");
     cardBody.classList.add("card-body");
     $dateEl.classList.add("card-title");
     $dailyEl.classList.add("card-subtitle");
     $tempEl.classList.add("card-text");
-  
+
     $fiveDayEl.appendChild(containerDiv);
     containerDiv.appendChild(cardDiv);
     cardDiv.appendChild(cardBody);
@@ -188,18 +206,16 @@ function init() {
 }
 
 // Helper function to capitalize the first letter of each word
-function capFirstLetter(str){
+function capFirstLetter(str) {
   var words = str.split(" ");
-    for (var i = 0; i < words.length; i++)
-    {
-        var j = words[i].charAt(0).toUpperCase();
-        words[i] = j + words[i].substr(1);
-    }
-    return words.join(" ");
+  for (var i = 0; i < words.length; i++) {
+    var j = words[i].charAt(0).toUpperCase();
+    words[i] = j + words[i].substr(1);
+  }
+  return words.join(" ");
 }
 
 init();
 
 cityFormEl.addEventListener("submit", formSubmitHandler);
-
 $searchHistoryEl.addEventListener("click", buttonSearchHandler);
