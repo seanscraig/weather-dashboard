@@ -4,7 +4,6 @@ var $searchHistoryEl = document.getElementById("search-history");
 
 var cityFormEl = document.getElementById("city-form");
 var cityEl = document.getElementById("city-search");
-// var searchBtnEl = document.getElementById("searchBtn");
 
 const APIKey = "17df62e6c611e766e40ad0ad3ee5ec14";
 
@@ -13,16 +12,19 @@ var searchHistory = [];
 var formSubmitHandler = function(event) {
   event.preventDefault();
 
-  // $todayEl.innerHTML = "";
-  // $fiveDayEl.innerHTML = "";
-
   var cityName = cityEl.value.trim();
+  cityEl.value = "";
+
   if (cityName === "") {
     alert("Please enter a city.");
     return;
   } else {
     cityName = capFirstLetter(cityName);
-    searchHistory.push(cityName);
+
+    if (searchHistory.indexOf(cityName) === -1){
+      searchHistory.push(cityName);
+    }
+    
     localStorage.setItem("search-history", JSON.stringify(searchHistory));
     renderHistory();
     getWeather(cityName);
@@ -34,6 +36,7 @@ var buttonSearchHandler = function(event) {
   
   var btn = event.target;
   var city = btn.getAttribute("data-search");
+
   getWeather(city);
 }
 
@@ -42,12 +45,13 @@ function renderHistory() {
 
   for (var i = 0; i < searchHistory.length; i++) {
     var history = searchHistory[i];
-
     var button = document.createElement("button");
+
     button.setAttribute("type", "button");
     button.setAttribute("data-search", history);
+
     button.textContent = history;
-    // button.id ="search-button";
+
     button.classList.add("btn");
     button.classList.add("btn-secondary");
 
@@ -98,14 +102,11 @@ function displayToday(city,data){
   var $uvButton = document.createElement("button");
   var $currentWeatherIconEl = document.createElement("img");
 
-  
-  
-  $cityNameEl.textContent = capFirstLetter(city)+" "+moment().format("(MM/DD/YYYY)");;
+  $cityNameEl.textContent = capFirstLetter(city)+" "+moment.unix(data.current.dt).format("(MM/DD/YYYY)")
   $currentDescriptionEl.textContent = capFirstLetter(data.current.weather[0].description);
   $currentTempEl.textContent = "Temp: "+data.current.temp+" ºF";
   $currentWindEl.textContent = "Wind: "+data.current.wind_speed+" MPH";
   $currentHumidityEl.textContent = "Humidity: "+data.current.humidity+" %";
-
 
   $currentUVLabel.textContent = "UV Index: ";
   $uvButton.textContent = data.current.uvi;

@@ -28,25 +28,28 @@
       <div class="row">
         <!-- Search for city -->
         <div class="col-md-3">
-          <h2>Search for a City:</h2>
-          <form id="city-form" class="d-flex gap-2">
-            <input
-              id="city-search"
-              class="form-control me-2"
-              type="search"
-              placeholder="Enter a city name"
-            />
-            <button class="btn btn-primary" type="submit">
-              <i class="fas fa-search"></i>
-            </button>
-          </form>
+          <div class="mb-2">
+            <h2>Search for a City:</h2>
+            <form id="city-form" class="d-flex">
+              <input
+                id="city-search"
+                class="form-control me-2"
+                type="search"
+                placeholder="Enter a city name"
+              />
+              <button class="btn btn-primary" type="submit">
+                <i class="fas fa-search"></i>
+              </button>
+            </form>
+          </div>
+          <hr>
 
           <div id="search-history" class="d-grid gap-2"></div>
         </div>
 
         <div class="col-md-9">
           <!-- Todays Weather -->
-          <div id="today"></div>
+          <div id="today" class="container mb-2"></div>
 
           <!-- Five day forecast -->
           <div id="five-day" class="row"></div>

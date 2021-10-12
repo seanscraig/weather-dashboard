@@ -1,3 +1,12 @@
+p {
+  font-size: 12px;
+}
+
+.jumbotron {
+  background-image: linear-gradient(to left, darkblue , lightblue);
+  color: #fff;
+}
+
 .icon{
   width: 50px;
 }
